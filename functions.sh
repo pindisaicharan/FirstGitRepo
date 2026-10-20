@@ -1,4 +1,4 @@
-#! bash/bin
+#! /bin/bash
 
 userID=$(id -u)
 
@@ -10,7 +10,7 @@ else
 fi
 
 validate(){
-    if [$1 -eq 0]; then
+    if [ $1 -eq 0 ]; then
         echo "$2 executed successfully."
     else
         echo "The $2 failed with exit code $1."
@@ -19,8 +19,9 @@ validate(){
 }
 
 dnf install nginx -y
-
-validate $? "nginx installation"
+status=$?
+printf 'dnf exit status: %s\n' "$status"
+validate "$status" "nginx installation"
 
 dnf install mysql -y
 

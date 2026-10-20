@@ -10,7 +10,7 @@ else
 fi
 
 validate(){
-    if [ $1 -eq 0 ]; then
+    if [[ "$1" -eq 0 ]]; then
         echo "$2 executed successfully."
     else
         echo "The $2 failed with exit code $1."

@@ -1,29 +1,31 @@
-#!/Bin/Bash
 
-userID=$(id -u)
-logs_file="/var/log/saicharan/${0}.log"
 
-if [ $userID -eq 0 ]; then
-    echo "You are running this script as root."
-else
-    echo "You are not running this script as root."
+user_id=$(id -u)
+logs_folder="/var/log/shell-practice"
+logs_file="${logs_folder}/${0}.log"
+
+if [ $user_id -ne 0 ]; then
+    echo "Please run this script with sudo access.."
     exit 1
-fi  
+fi
 
-mkdir -p /var/log/saicharan
+mkdir -p $logs_folder
 
 echo "Script started execution at $(date +"%F %T")" &>> $logs_file
 
 validate(){
-    if [[ "$1" -eq 0 ]]; then
-        echo "$2 executed successfully." &>> $logs_file
-    else
-        echo "The $2 failed with exit code $1." &>> $logs_file
+    if [ $1 -ne 0 ]; then
+        echo "${2}..FAILED" | tee -a $logs_file
         exit 1
+    else
+        echo "${2}..SUCCESS" | tee -a $logs_file
     fi
 }
 
 dnf install nginx -y &>> $logs_file
-validate $? "Initial validation"
+validate $? "Nginx Installation"
 
-echo "the End"
+dnf install mysql -y &>> $logs_file
+validate $? "Mysql Installation"
+
+echo "Script execution completed at $(date +"%F %T")" &>> $logs_file

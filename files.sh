@@ -5,7 +5,7 @@ logs_folder="/var/log/shell-practice"
 logs_file="${logs_folder}/${0}.log"
 
 if [ $user_id -ne 0 ]; then
-    echo "Please run this script with sudo access.."
+    echo "Please run this script with sudo ."
     exit 1
 fi
 
@@ -27,5 +27,11 @@ validate $? "Nginx Installation"
 
 dnf install mysql -y &>> $logs_file
 validate $? "Mysql Installation"
+
+
+for package in ${@}; do
+    dnf install $package -y &>> $logs_file
+    validate $? "$package Installation"
+done
 
 echo "Script execution completed at $(date +"%F %T")" &>> $logs_file
